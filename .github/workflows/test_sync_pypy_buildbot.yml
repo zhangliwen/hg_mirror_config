@@ -55,8 +55,15 @@ jobs:
           
           git config core.notesRef refs/notes/hg
           git remote set-url origin 'hg::https://foss.heptapod.net/pypy/buildbot'
+
+          for remote in `git branch|grep -v '\* master'`; do
+            git branch -d $remote
+          done
+          
           python2 ../git-remote-hg/track_all_remote_branches.py
+          
           git pull
+          git reset --hard default
           
           git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/hg-mirrors/pypy_buildbot.git --all -f
           git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/hg-mirrors/pypy_buildbot.git --tags -f
