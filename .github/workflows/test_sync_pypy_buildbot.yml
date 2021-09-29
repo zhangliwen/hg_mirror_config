@@ -9,6 +9,9 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
+  schedule:
+    # Runs at 16:30 UTC (00:30 AM Beijing) every day
+    - cron:  '30 16 * * *'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
