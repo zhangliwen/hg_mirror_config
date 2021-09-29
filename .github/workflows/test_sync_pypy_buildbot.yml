@@ -46,6 +46,29 @@ jobs:
           chmod +x git-remote-hg
           cp git-remote-hg /usr/local/bin/
           
+      - name: init mirror repo
+        run: |
+          set -xe
+          git clone "hg::https://foss.heptapod.net/pypy/buildbot"
+          cd buildbot
+          git config core.notesRef refs/notes/hg
+          # git remote add mirror https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/hg-mirrors/pypy_buildbot.git
+          
+          for remote in `git branch|grep -v '\* master'`; do
+            git branch -d $remote
+          done
+          
+          python2 ../git-remote-hg/track_all_remote_branches.py
+          
+          git pull
+          git reset --hard default
+          
+          # git config -l | grep 'http\..*\.extraheader' | cut -d= -f1 | xargs -L1 git config --unset-all
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/hg-mirrors/pypy_buildbot.git --all -f
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/hg-mirrors/pypy_buildbot.git --tags -f
+          
       - name: test update exist mirror repo
         run: |
           set -xe
@@ -55,15 +78,8 @@ jobs:
           
           git config core.notesRef refs/notes/hg
           git remote set-url origin 'hg::https://foss.heptapod.net/pypy/buildbot'
-
-          for remote in `git branch|grep -v '\* master'`; do
-            git branch -d $remote
-          done
-          
           python2 ../git-remote-hg/track_all_remote_branches.py
-          
           git pull
-          git reset --hard default
           
           git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/hg-mirrors/pypy_buildbot.git --all -f
           git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/hg-mirrors/pypy_buildbot.git --tags -f
