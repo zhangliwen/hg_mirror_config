@@ -46,24 +46,290 @@ jobs:
           chmod +x git-remote-hg
           cp git-remote-hg /usr/local/bin/
           
-          
-      - name: init mirror repo buildbot
+      - name: init mirror repo benchmarks
+        continue-on-error: true
         run: |
           set -xe
-          git clone "hg::https://foss.heptapod.net/pypy/buildbot"
-          cd buildbot
+          git clone "hg::https://foss.heptapod.net/pypy/benchmarks"
+          cd benchmarks
           git config core.notesRef refs/notes/hg
-          git remote set-url origin 'hg::https://foss.heptapod.net/pypy/buildbot'
           
           for remote in `git branch|grep -v '\* master'`; do
             git branch -d $remote
           done
           
+          git remote set-url origin 'hg::https://foss.heptapod.net/pypy/benchmarks'
+          python2 ../git-remote-hg/track_all_remote_branches.py
+          
+          git pull
+          git reset --hard default
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_benchmarks.git --all -f
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_benchmarks.git --tags -f
+          
+
+      - name: init mirror repo buildbot
+        continue-on-error: true
+        run: |
+          set -xe
+          git clone "hg::https://foss.heptapod.net/pypy/buildbot"
+          cd buildbot
+          git config core.notesRef refs/notes/hg
+          
+          for remote in `git branch|grep -v '\* master'`; do
+            git branch -d $remote
+          done
+          
+          git remote set-url origin 'hg::https://foss.heptapod.net/pypy/buildbot'
           python2 ../git-remote-hg/track_all_remote_branches.py
           
           git pull
           git reset --hard default
           
           git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_buildbot.git --all -f
+          
           git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_buildbot.git --tags -f
+          
+      - name: init mirror repo cffi
+        continue-on-error: true
+        run: |
+          set -xe
+          git clone "hg::https://foss.heptapod.net/pypy/cffi"
+          cd cffi
+          git config core.notesRef refs/notes/hg
+          
+          for remote in `git branch|grep -v '\* master'`; do
+            git branch -d $remote
+          done
+          
+          git remote set-url origin 'hg::https://foss.heptapod.net/pypy/cffi'
+          python2 ../git-remote-hg/track_all_remote_branches.py
+          
+          git pull
+          git reset --hard default
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_cffi.git --all -f
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_cffi.git --tags -f
+          
+      - name: init mirror repo example-interpreter
+        continue-on-error: true
+        run: |
+          set -xe
+          git clone "hg::https://foss.heptapod.net/pypy/example-interpreter"
+          cd example-interpreter
+          git config core.notesRef refs/notes/hg
+          
+          for remote in `git branch|grep -v '\* master'`; do
+            git branch -d $remote
+          done
+          
+          git remote set-url origin 'hg::https://foss.heptapod.net/pypy/example-interpreter'
+          python2 ../git-remote-hg/track_all_remote_branches.py
+          
+          git pull
+          git reset --hard default
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_example-interpreter.git --all -f
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_example-interpreter.git --tags -f
+          
+      - name: init mirror repo externals
+        continue-on-error: true
+        run: |
+          set -xe
+          git clone "hg::https://foss.heptapod.net/pypy/externals"
+          cd externals
+          git config core.notesRef refs/notes/hg
+          
+          for remote in `git branch|grep -v '\* master'`; do
+            git branch -d $remote
+          done
+          
+          git remote set-url origin 'hg::https://foss.heptapod.net/pypy/externals'
+          python2 ../git-remote-hg/track_all_remote_branches.py
+          
+          git pull
+          git reset --hard default
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_externals.git --all -f
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_externals.git --tags -f
+          
+      - name: init mirror repo example-extradoc
+        continue-on-error: true
+        run: |
+          set -xe
+          git clone "hg::https://foss.heptapod.net/pypy/example-extradoc"
+          cd example-extradoc
+          git config core.notesRef refs/notes/hg
+          
+          for remote in `git branch|grep -v '\* master'`; do
+            git branch -d $remote
+          done
+          
+          git remote set-url origin 'hg::https://foss.heptapod.net/pypy/example-extradoc'
+          python2 ../git-remote-hg/track_all_remote_branches.py
+          
+          git pull
+          git reset --hard default
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_example-extradoc.git --all -f
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_example-extradoc.git --tags -f
+          
+      - name: init mirror repo externals
+        continue-on-error: true
+        run: |
+          set -xe
+          git clone "hg::https://foss.heptapod.net/pypy/externals"
+          cd externals
+          git config core.notesRef refs/notes/hg
+          
+          for remote in `git branch|grep -v '\* master'`; do
+            git branch -d $remote
+          done
+          
+          git remote set-url origin 'hg::https://foss.heptapod.net/pypy/externals'
+          python2 ../git-remote-hg/track_all_remote_branches.py
+          
+          git pull
+          git reset --hard default
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_externals.git --all -f
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_externals.git --tags -f
+          
+      - name: init mirror repo example-jitviewer
+        continue-on-error: true
+        run: |
+          set -xe
+          git clone "hg::https://foss.heptapod.net/pypy/example-jitviewer"
+          cd example-jitviewer
+          git config core.notesRef refs/notes/hg
+          
+          for remote in `git branch|grep -v '\* master'`; do
+            git branch -d $remote
+          done
+          
+          git remote set-url origin 'hg::https://foss.heptapod.net/pypy/example-jitviewer'
+          python2 ../git-remote-hg/track_all_remote_branches.py
+          
+          git pull
+          git reset --hard default
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_example-jitviewer.git --all -f
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_example-jitviewer.git --tags -f
+          
+      - name: init mirror repo example-pypy
+        continue-on-error: true
+        run: |
+          set -xe
+          git clone "hg::https://foss.heptapod.net/pypy/example-pypy"
+          cd example-pypy
+          git config core.notesRef refs/notes/hg
+          
+          for remote in `git branch|grep -v '\* master'`; do
+            git branch -d $remote
+          done
+          
+          git remote set-url origin 'hg::https://foss.heptapod.net/pypy/example-pypy'
+          python2 ../git-remote-hg/track_all_remote_branches.py
+          
+          git pull
+          git reset --hard default
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_example-pypy.git --all -f
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_example-pypy.git --tags -f
+          
+      - name: init mirror repo pypy.org
+        continue-on-error: true
+        run: |
+          set -xe
+          git clone "hg::https://foss.heptapod.net/pypy/pypy.org"
+          cd pypy.org
+          git config core.notesRef refs/notes/hg
+          
+          for remote in `git branch|grep -v '\* master'`; do
+            git branch -d $remote
+          done
+          
+          git remote set-url origin 'hg::https://foss.heptapod.net/pypy/pypy.org'
+          python2 ../git-remote-hg/track_all_remote_branches.py
+          
+          git pull
+          git reset --hard default
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_pypy.org.git --all -f
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_pypy.org.git --tags -f
+          
+      - name: init mirror repo revdb
+        continue-on-error: true
+        run: |
+          set -xe
+          git clone "hg::https://foss.heptapod.net/pypy/revdb"
+          cd revdb
+          git config core.notesRef refs/notes/hg
+          
+          for remote in `git branch|grep -v '\* master'`; do
+            git branch -d $remote
+          done
+          
+          git remote set-url origin 'hg::https://foss.heptapod.net/pypy/revdb'
+          python2 ../git-remote-hg/track_all_remote_branches.py
+          
+          git pull
+          git reset --hard default
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_revdb.git --all -f
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_revdb.git --tags -f
+          
+      - name: init mirror repo sandboxlib
+        continue-on-error: true
+        run: |
+          set -xe
+          git clone "hg::https://foss.heptapod.net/pypy/sandboxlib"
+          cd sandboxlib
+          git config core.notesRef refs/notes/hg
+          
+          for remote in `git branch|grep -v '\* master'`; do
+            git branch -d $remote
+          done
+          
+          git remote set-url origin 'hg::https://foss.heptapod.net/pypy/sandboxlib'
+          python2 ../git-remote-hg/track_all_remote_branches.py
+          
+          git pull
+          git reset --hard default
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_sandboxlib.git --all -f
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_sandboxlib.git --tags -f
+          
+      - name: init mirror repo stmgc
+        continue-on-error: true
+        run: |
+          set -xe
+          git clone "hg::https://foss.heptapod.net/pypy/stmgc"
+          cd stmgc
+          git config core.notesRef refs/notes/hg
+          
+          for remote in `git branch|grep -v '\* master'`; do
+            git branch -d $remote
+          done
+          
+          git remote set-url origin 'hg::https://foss.heptapod.net/pypy/stmgc'
+          python2 ../git-remote-hg/track_all_remote_branches.py
+          
+          git pull
+          git reset --hard default
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_stmgc.git --all -f
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_stmgc.git --tags -f
           
