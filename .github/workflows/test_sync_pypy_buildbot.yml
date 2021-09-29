@@ -65,22 +65,5 @@ jobs:
           
           # git config -l | grep 'http\..*\.extraheader' | cut -d= -f1 | xargs -L1 git config --unset-all
           
-          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_buildbot.git --all
-          
-          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_buildbot.git --tags
-          
-      - name: test update exist mirror repo
-        run: |
-          set -xe
-          
-          git clone https://github.com/${{ secrets.NAMESPACE }}/pypy_buildbot.git
-          cd pypy_buildbot
-          
-          git config core.notesRef refs/notes/hg
-          git remote set-url origin 'hg::https://foss.heptapod.net/pypy/buildbot'
-          python2 ../git-remote-hg/track_all_remote_branches.py
-          git pull
-          
-          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_buildbot.git --all
-          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_buildbot.git --tags
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_buildbot.git "refs/heads/*:refs/heads/*" "refs/tags/*:refs/tags/*" --prune -f
           
