@@ -46,7 +46,67 @@ jobs:
           chmod +x git-remote-hg
           cp git-remote-hg /usr/local/bin/
           
-      - name: init mirror repo
+      - name: init mirror repo benchmarks
+        run: |
+          set -xe
+          git clone "hg::https://foss.heptapod.net/pypy/benchmarks"
+          cd benchmarks
+          git config core.notesRef refs/notes/hg
+          # git remote add mirror https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_benchmarks.git
+          
+          for remote in `git branch|grep -v '\* master'`; do
+            git branch -d $remote
+          done
+          
+          python2 ../git-remote-hg/track_all_remote_branches.py
+          
+          git pull
+          git reset --hard default
+          
+          # git config -l | grep 'http\..*\.extraheader' | cut -d= -f1 | xargs -L1 git config --unset-all
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_benchmarks.git --all -f
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_benchmarks.git --tags -f
+          
+      - name: test update exist mirror repo benchmarks
+        run: |
+          set -xe
+          
+          git clone https://github.com/${{ secrets.NAMESPACE }}/pypy_benchmarks.git
+          cd pypy_benchmarks
+          
+          git config core.notesRef refs/notes/hg
+          git remote set-url origin 'hg::https://foss.heptapod.net/pypy/benchmarks'
+          python2 ../git-remote-hg/track_all_remote_branches.py
+          git pull
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_benchmarks.git --all -f
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_benchmarks.git --tags -f
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      # Runs a single command using the runners shell
+      - name: install hg
+        run: |
+          set -xe
+          # wget https://www.mercurial-scm.org/release/mercurial-3.2.4.tar.gz
+          # tar zxf mercurial-3.2.4.tar.gz
+          # cd mercurial-3.2.4
+          # sudo pip install docutils
+          # sudo make install
+          sudo pip install mercurial==5.3.2
+      - name: install git-remote-hg
+        run: |
+          set -xe
+          git clone https://github.com/mozillazg/git-remote-hg.git -b pypy
+          cd git-remote-hg
+          chmod +x git-remote-hg
+          cp git-remote-hg /usr/local/bin/
+          
+      - name: init mirror repo buildbot
         run: |
           set -xe
           git clone "hg::https://foss.heptapod.net/pypy/buildbot"
@@ -69,7 +129,7 @@ jobs:
           
           git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_buildbot.git --tags -f
           
-      - name: test update exist mirror repo
+      - name: test update exist mirror repo buildbot
         run: |
           set -xe
           
@@ -83,4 +143,653 @@ jobs:
           
           git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_buildbot.git --all -f
           git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_buildbot.git --tags -f
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      # Runs a single command using the runners shell
+      - name: install hg
+        run: |
+          set -xe
+          # wget https://www.mercurial-scm.org/release/mercurial-3.2.4.tar.gz
+          # tar zxf mercurial-3.2.4.tar.gz
+          # cd mercurial-3.2.4
+          # sudo pip install docutils
+          # sudo make install
+          sudo pip install mercurial==5.3.2
+      - name: install git-remote-hg
+        run: |
+          set -xe
+          git clone https://github.com/mozillazg/git-remote-hg.git -b pypy
+          cd git-remote-hg
+          chmod +x git-remote-hg
+          cp git-remote-hg /usr/local/bin/
           
+      - name: init mirror repo cffi
+        run: |
+          set -xe
+          git clone "hg::https://foss.heptapod.net/pypy/cffi"
+          cd cffi
+          git config core.notesRef refs/notes/hg
+          # git remote add mirror https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_cffi.git
+          
+          for remote in `git branch|grep -v '\* master'`; do
+            git branch -d $remote
+          done
+          
+          python2 ../git-remote-hg/track_all_remote_branches.py
+          
+          git pull
+          git reset --hard default
+          
+          # git config -l | grep 'http\..*\.extraheader' | cut -d= -f1 | xargs -L1 git config --unset-all
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_cffi.git --all -f
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_cffi.git --tags -f
+          
+      - name: test update exist mirror repo cffi
+        run: |
+          set -xe
+          
+          git clone https://github.com/${{ secrets.NAMESPACE }}/pypy_cffi.git
+          cd pypy_cffi
+          
+          git config core.notesRef refs/notes/hg
+          git remote set-url origin 'hg::https://foss.heptapod.net/pypy/cffi'
+          python2 ../git-remote-hg/track_all_remote_branches.py
+          git pull
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_cffi.git --all -f
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_cffi.git --tags -f
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      # Runs a single command using the runners shell
+      - name: install hg
+        run: |
+          set -xe
+          # wget https://www.mercurial-scm.org/release/mercurial-3.2.4.tar.gz
+          # tar zxf mercurial-3.2.4.tar.gz
+          # cd mercurial-3.2.4
+          # sudo pip install docutils
+          # sudo make install
+          sudo pip install mercurial==5.3.2
+      - name: install git-remote-hg
+        run: |
+          set -xe
+          git clone https://github.com/mozillazg/git-remote-hg.git -b pypy
+          cd git-remote-hg
+          chmod +x git-remote-hg
+          cp git-remote-hg /usr/local/bin/
+          
+      - name: init mirror repo example-interpreter
+        run: |
+          set -xe
+          git clone "hg::https://foss.heptapod.net/pypy/example-interpreter"
+          cd example-interpreter
+          git config core.notesRef refs/notes/hg
+          # git remote add mirror https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_example-interpreter.git
+          
+          for remote in `git branch|grep -v '\* master'`; do
+            git branch -d $remote
+          done
+          
+          python2 ../git-remote-hg/track_all_remote_branches.py
+          
+          git pull
+          git reset --hard default
+          
+          # git config -l | grep 'http\..*\.extraheader' | cut -d= -f1 | xargs -L1 git config --unset-all
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_example-interpreter.git --all -f
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_example-interpreter.git --tags -f
+          
+      - name: test update exist mirror repo example-interpreter
+        run: |
+          set -xe
+          
+          git clone https://github.com/${{ secrets.NAMESPACE }}/pypy_example-interpreter.git
+          cd pypy_example-interpreter
+          
+          git config core.notesRef refs/notes/hg
+          git remote set-url origin 'hg::https://foss.heptapod.net/pypy/example-interpreter'
+          python2 ../git-remote-hg/track_all_remote_branches.py
+          git pull
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_example-interpreter.git --all -f
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_example-interpreter.git --tags -f
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      # Runs a single command using the runners shell
+      - name: install hg
+        run: |
+          set -xe
+          # wget https://www.mercurial-scm.org/release/mercurial-3.2.4.tar.gz
+          # tar zxf mercurial-3.2.4.tar.gz
+          # cd mercurial-3.2.4
+          # sudo pip install docutils
+          # sudo make install
+          sudo pip install mercurial==5.3.2
+      - name: install git-remote-hg
+        run: |
+          set -xe
+          git clone https://github.com/mozillazg/git-remote-hg.git -b pypy
+          cd git-remote-hg
+          chmod +x git-remote-hg
+          cp git-remote-hg /usr/local/bin/
+          
+      - name: init mirror repo externals
+        run: |
+          set -xe
+          git clone "hg::https://foss.heptapod.net/pypy/externals"
+          cd externals
+          git config core.notesRef refs/notes/hg
+          # git remote add mirror https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_externals.git
+          
+          for remote in `git branch|grep -v '\* master'`; do
+            git branch -d $remote
+          done
+          
+          python2 ../git-remote-hg/track_all_remote_branches.py
+          
+          git pull
+          git reset --hard default
+          
+          # git config -l | grep 'http\..*\.extraheader' | cut -d= -f1 | xargs -L1 git config --unset-all
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_externals.git --all -f
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_externals.git --tags -f
+          
+      - name: test update exist mirror repo externals
+        run: |
+          set -xe
+          
+          git clone https://github.com/${{ secrets.NAMESPACE }}/pypy_externals.git
+          cd pypy_externals
+          
+          git config core.notesRef refs/notes/hg
+          git remote set-url origin 'hg::https://foss.heptapod.net/pypy/externals'
+          python2 ../git-remote-hg/track_all_remote_branches.py
+          git pull
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_externals.git --all -f
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_externals.git --tags -f
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      # Runs a single command using the runners shell
+      - name: install hg
+        run: |
+          set -xe
+          # wget https://www.mercurial-scm.org/release/mercurial-3.2.4.tar.gz
+          # tar zxf mercurial-3.2.4.tar.gz
+          # cd mercurial-3.2.4
+          # sudo pip install docutils
+          # sudo make install
+          sudo pip install mercurial==5.3.2
+      - name: install git-remote-hg
+        run: |
+          set -xe
+          git clone https://github.com/mozillazg/git-remote-hg.git -b pypy
+          cd git-remote-hg
+          chmod +x git-remote-hg
+          cp git-remote-hg /usr/local/bin/
+          
+      - name: init mirror repo example-extradoc
+        run: |
+          set -xe
+          git clone "hg::https://foss.heptapod.net/pypy/example-extradoc"
+          cd example-extradoc
+          git config core.notesRef refs/notes/hg
+          # git remote add mirror https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_example-extradoc.git
+          
+          for remote in `git branch|grep -v '\* master'`; do
+            git branch -d $remote
+          done
+          
+          python2 ../git-remote-hg/track_all_remote_branches.py
+          
+          git pull
+          git reset --hard default
+          
+          # git config -l | grep 'http\..*\.extraheader' | cut -d= -f1 | xargs -L1 git config --unset-all
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_example-extradoc.git --all -f
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_example-extradoc.git --tags -f
+          
+      - name: test update exist mirror repo example-extradoc
+        run: |
+          set -xe
+          
+          git clone https://github.com/${{ secrets.NAMESPACE }}/pypy_example-extradoc.git
+          cd pypy_example-extradoc
+          
+          git config core.notesRef refs/notes/hg
+          git remote set-url origin 'hg::https://foss.heptapod.net/pypy/example-extradoc'
+          python2 ../git-remote-hg/track_all_remote_branches.py
+          git pull
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_example-extradoc.git --all -f
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_example-extradoc.git --tags -f
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      # Runs a single command using the runners shell
+      - name: install hg
+        run: |
+          set -xe
+          # wget https://www.mercurial-scm.org/release/mercurial-3.2.4.tar.gz
+          # tar zxf mercurial-3.2.4.tar.gz
+          # cd mercurial-3.2.4
+          # sudo pip install docutils
+          # sudo make install
+          sudo pip install mercurial==5.3.2
+      - name: install git-remote-hg
+        run: |
+          set -xe
+          git clone https://github.com/mozillazg/git-remote-hg.git -b pypy
+          cd git-remote-hg
+          chmod +x git-remote-hg
+          cp git-remote-hg /usr/local/bin/
+          
+      - name: init mirror repo externals
+        run: |
+          set -xe
+          git clone "hg::https://foss.heptapod.net/pypy/externals"
+          cd externals
+          git config core.notesRef refs/notes/hg
+          # git remote add mirror https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_externals.git
+          
+          for remote in `git branch|grep -v '\* master'`; do
+            git branch -d $remote
+          done
+          
+          python2 ../git-remote-hg/track_all_remote_branches.py
+          
+          git pull
+          git reset --hard default
+          
+          # git config -l | grep 'http\..*\.extraheader' | cut -d= -f1 | xargs -L1 git config --unset-all
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_externals.git --all -f
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_externals.git --tags -f
+          
+      - name: test update exist mirror repo externals
+        run: |
+          set -xe
+          
+          git clone https://github.com/${{ secrets.NAMESPACE }}/pypy_externals.git
+          cd pypy_externals
+          
+          git config core.notesRef refs/notes/hg
+          git remote set-url origin 'hg::https://foss.heptapod.net/pypy/externals'
+          python2 ../git-remote-hg/track_all_remote_branches.py
+          git pull
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_externals.git --all -f
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_externals.git --tags -f
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      # Runs a single command using the runners shell
+      - name: install hg
+        run: |
+          set -xe
+          # wget https://www.mercurial-scm.org/release/mercurial-3.2.4.tar.gz
+          # tar zxf mercurial-3.2.4.tar.gz
+          # cd mercurial-3.2.4
+          # sudo pip install docutils
+          # sudo make install
+          sudo pip install mercurial==5.3.2
+      - name: install git-remote-hg
+        run: |
+          set -xe
+          git clone https://github.com/mozillazg/git-remote-hg.git -b pypy
+          cd git-remote-hg
+          chmod +x git-remote-hg
+          cp git-remote-hg /usr/local/bin/
+          
+      - name: init mirror repo example-jitviewer
+        run: |
+          set -xe
+          git clone "hg::https://foss.heptapod.net/pypy/example-jitviewer"
+          cd example-jitviewer
+          git config core.notesRef refs/notes/hg
+          # git remote add mirror https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_example-jitviewer.git
+          
+          for remote in `git branch|grep -v '\* master'`; do
+            git branch -d $remote
+          done
+          
+          python2 ../git-remote-hg/track_all_remote_branches.py
+          
+          git pull
+          git reset --hard default
+          
+          # git config -l | grep 'http\..*\.extraheader' | cut -d= -f1 | xargs -L1 git config --unset-all
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_example-jitviewer.git --all -f
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_example-jitviewer.git --tags -f
+          
+      - name: test update exist mirror repo example-jitviewer
+        run: |
+          set -xe
+          
+          git clone https://github.com/${{ secrets.NAMESPACE }}/pypy_example-jitviewer.git
+          cd pypy_example-jitviewer
+          
+          git config core.notesRef refs/notes/hg
+          git remote set-url origin 'hg::https://foss.heptapod.net/pypy/example-jitviewer'
+          python2 ../git-remote-hg/track_all_remote_branches.py
+          git pull
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_example-jitviewer.git --all -f
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_example-jitviewer.git --tags -f
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      # Runs a single command using the runners shell
+      - name: install hg
+        run: |
+          set -xe
+          # wget https://www.mercurial-scm.org/release/mercurial-3.2.4.tar.gz
+          # tar zxf mercurial-3.2.4.tar.gz
+          # cd mercurial-3.2.4
+          # sudo pip install docutils
+          # sudo make install
+          sudo pip install mercurial==5.3.2
+      - name: install git-remote-hg
+        run: |
+          set -xe
+          git clone https://github.com/mozillazg/git-remote-hg.git -b pypy
+          cd git-remote-hg
+          chmod +x git-remote-hg
+          cp git-remote-hg /usr/local/bin/
+          
+      - name: init mirror repo example-pypy
+        run: |
+          set -xe
+          git clone "hg::https://foss.heptapod.net/pypy/example-pypy"
+          cd example-pypy
+          git config core.notesRef refs/notes/hg
+          # git remote add mirror https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_example-pypy.git
+          
+          for remote in `git branch|grep -v '\* master'`; do
+            git branch -d $remote
+          done
+          
+          python2 ../git-remote-hg/track_all_remote_branches.py
+          
+          git pull
+          git reset --hard default
+          
+          # git config -l | grep 'http\..*\.extraheader' | cut -d= -f1 | xargs -L1 git config --unset-all
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_example-pypy.git --all -f
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_example-pypy.git --tags -f
+          
+      - name: test update exist mirror repo example-pypy
+        run: |
+          set -xe
+          
+          git clone https://github.com/${{ secrets.NAMESPACE }}/pypy_example-pypy.git
+          cd pypy_example-pypy
+          
+          git config core.notesRef refs/notes/hg
+          git remote set-url origin 'hg::https://foss.heptapod.net/pypy/example-pypy'
+          python2 ../git-remote-hg/track_all_remote_branches.py
+          git pull
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_example-pypy.git --all -f
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_example-pypy.git --tags -f
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      # Runs a single command using the runners shell
+      - name: install hg
+        run: |
+          set -xe
+          # wget https://www.mercurial-scm.org/release/mercurial-3.2.4.tar.gz
+          # tar zxf mercurial-3.2.4.tar.gz
+          # cd mercurial-3.2.4
+          # sudo pip install docutils
+          # sudo make install
+          sudo pip install mercurial==5.3.2
+      - name: install git-remote-hg
+        run: |
+          set -xe
+          git clone https://github.com/mozillazg/git-remote-hg.git -b pypy
+          cd git-remote-hg
+          chmod +x git-remote-hg
+          cp git-remote-hg /usr/local/bin/
+          
+      - name: init mirror repo pypy.org
+        run: |
+          set -xe
+          git clone "hg::https://foss.heptapod.net/pypy/pypy.org"
+          cd pypy.org
+          git config core.notesRef refs/notes/hg
+          # git remote add mirror https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_pypy.org.git
+          
+          for remote in `git branch|grep -v '\* master'`; do
+            git branch -d $remote
+          done
+          
+          python2 ../git-remote-hg/track_all_remote_branches.py
+          
+          git pull
+          git reset --hard default
+          
+          # git config -l | grep 'http\..*\.extraheader' | cut -d= -f1 | xargs -L1 git config --unset-all
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_pypy.org.git --all -f
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_pypy.org.git --tags -f
+          
+      - name: test update exist mirror repo pypy.org
+        run: |
+          set -xe
+          
+          git clone https://github.com/${{ secrets.NAMESPACE }}/pypy_pypy.org.git
+          cd pypy_pypy.org
+          
+          git config core.notesRef refs/notes/hg
+          git remote set-url origin 'hg::https://foss.heptapod.net/pypy/pypy.org'
+          python2 ../git-remote-hg/track_all_remote_branches.py
+          git pull
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_pypy.org.git --all -f
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_pypy.org.git --tags -f
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      # Runs a single command using the runners shell
+      - name: install hg
+        run: |
+          set -xe
+          # wget https://www.mercurial-scm.org/release/mercurial-3.2.4.tar.gz
+          # tar zxf mercurial-3.2.4.tar.gz
+          # cd mercurial-3.2.4
+          # sudo pip install docutils
+          # sudo make install
+          sudo pip install mercurial==5.3.2
+      - name: install git-remote-hg
+        run: |
+          set -xe
+          git clone https://github.com/mozillazg/git-remote-hg.git -b pypy
+          cd git-remote-hg
+          chmod +x git-remote-hg
+          cp git-remote-hg /usr/local/bin/
+          
+      - name: init mirror repo revdb
+        run: |
+          set -xe
+          git clone "hg::https://foss.heptapod.net/pypy/revdb"
+          cd revdb
+          git config core.notesRef refs/notes/hg
+          # git remote add mirror https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_revdb.git
+          
+          for remote in `git branch|grep -v '\* master'`; do
+            git branch -d $remote
+          done
+          
+          python2 ../git-remote-hg/track_all_remote_branches.py
+          
+          git pull
+          git reset --hard default
+          
+          # git config -l | grep 'http\..*\.extraheader' | cut -d= -f1 | xargs -L1 git config --unset-all
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_revdb.git --all -f
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_revdb.git --tags -f
+          
+      - name: test update exist mirror repo revdb
+        run: |
+          set -xe
+          
+          git clone https://github.com/${{ secrets.NAMESPACE }}/pypy_revdb.git
+          cd pypy_revdb
+          
+          git config core.notesRef refs/notes/hg
+          git remote set-url origin 'hg::https://foss.heptapod.net/pypy/revdb'
+          python2 ../git-remote-hg/track_all_remote_branches.py
+          git pull
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_revdb.git --all -f
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_revdb.git --tags -f
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      # Runs a single command using the runners shell
+      - name: install hg
+        run: |
+          set -xe
+          # wget https://www.mercurial-scm.org/release/mercurial-3.2.4.tar.gz
+          # tar zxf mercurial-3.2.4.tar.gz
+          # cd mercurial-3.2.4
+          # sudo pip install docutils
+          # sudo make install
+          sudo pip install mercurial==5.3.2
+      - name: install git-remote-hg
+        run: |
+          set -xe
+          git clone https://github.com/mozillazg/git-remote-hg.git -b pypy
+          cd git-remote-hg
+          chmod +x git-remote-hg
+          cp git-remote-hg /usr/local/bin/
+          
+      - name: init mirror repo sandboxlib
+        run: |
+          set -xe
+          git clone "hg::https://foss.heptapod.net/pypy/sandboxlib"
+          cd sandboxlib
+          git config core.notesRef refs/notes/hg
+          # git remote add mirror https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_sandboxlib.git
+          
+          for remote in `git branch|grep -v '\* master'`; do
+            git branch -d $remote
+          done
+          
+          python2 ../git-remote-hg/track_all_remote_branches.py
+          
+          git pull
+          git reset --hard default
+          
+          # git config -l | grep 'http\..*\.extraheader' | cut -d= -f1 | xargs -L1 git config --unset-all
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_sandboxlib.git --all -f
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_sandboxlib.git --tags -f
+          
+      - name: test update exist mirror repo sandboxlib
+        run: |
+          set -xe
+          
+          git clone https://github.com/${{ secrets.NAMESPACE }}/pypy_sandboxlib.git
+          cd pypy_sandboxlib
+          
+          git config core.notesRef refs/notes/hg
+          git remote set-url origin 'hg::https://foss.heptapod.net/pypy/sandboxlib'
+          python2 ../git-remote-hg/track_all_remote_branches.py
+          git pull
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_sandboxlib.git --all -f
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_sandboxlib.git --tags -f
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      # Runs a single command using the runners shell
+      - name: install hg
+        run: |
+          set -xe
+          # wget https://www.mercurial-scm.org/release/mercurial-3.2.4.tar.gz
+          # tar zxf mercurial-3.2.4.tar.gz
+          # cd mercurial-3.2.4
+          # sudo pip install docutils
+          # sudo make install
+          sudo pip install mercurial==5.3.2
+      - name: install git-remote-hg
+        run: |
+          set -xe
+          git clone https://github.com/mozillazg/git-remote-hg.git -b pypy
+          cd git-remote-hg
+          chmod +x git-remote-hg
+          cp git-remote-hg /usr/local/bin/
+          
+      - name: init mirror repo stmgc
+        run: |
+          set -xe
+          git clone "hg::https://foss.heptapod.net/pypy/stmgc"
+          cd stmgc
+          git config core.notesRef refs/notes/hg
+          # git remote add mirror https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_stmgc.git
+          
+          for remote in `git branch|grep -v '\* master'`; do
+            git branch -d $remote
+          done
+          
+          python2 ../git-remote-hg/track_all_remote_branches.py
+          
+          git pull
+          git reset --hard default
+          
+          # git config -l | grep 'http\..*\.extraheader' | cut -d= -f1 | xargs -L1 git config --unset-all
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_stmgc.git --all -f
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_stmgc.git --tags -f
+          
+      - name: test update exist mirror repo stmgc
+        run: |
+          set -xe
+          
+          git clone https://github.com/${{ secrets.NAMESPACE }}/pypy_stmgc.git
+          cd pypy_stmgc
+          
+          git config core.notesRef refs/notes/hg
+          git remote set-url origin 'hg::https://foss.heptapod.net/pypy/stmgc'
+          python2 ../git-remote-hg/track_all_remote_branches.py
+          git pull
+          
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_stmgc.git --all -f
+          git push https://zhangliwen:${{ secrets.PERSONAL_GIT_TOKEN }}@github.com/${{ secrets.NAMESPACE }}/pypy_stmgc.git --tags -f
+ 
